@@ -17,20 +17,23 @@ module.exports = () => {
     plugins: [
       // configure the HtmlWebpackPlugin
       new HtmlWebpackPlugin({
-        template: './src/index.html',
-        filename: 'index.html',
-        chunks: ['main'],
+        template: './index.html',
+        title: 'Text Editor'
       }),
       // configure the WebpackPwaManifest
       new WebpackPwaManifest({
+        fingerprints: false,
+        inject: true,
         name: 'Text Editor Extraordinaire',
         short_name: 'TEE Time',
         description: 'My awesome text editor app!',
         theme_color: '#ffffff',
         background_color: '#ffffff',
+        start_url: './',
+        publicPath: './',
         icons: [
           {
-            src: path.resolve('src/assets/icon.png'),
+            src: path.resolve('src/images/logo.png'),
             sizes: [96, 128, 192, 256, 384, 512],
             destination: path.join('assets', 'icons'),
           },
@@ -38,8 +41,8 @@ module.exports = () => {
       }),
       // configure the InjectManifest
       new InjectManifest({
-        swSrc: './src/sw.js',
-        swDest: 'sw.js',
+        swSrc: './src-sw.js',
+        swDest: 'src-sw.js',
       }),
     ],
 
@@ -52,12 +55,13 @@ module.exports = () => {
         },
         // add babel loader
         {
-          test: /\.js$/,
+          test: /\.m?js$/,
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env'],
+              plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/transform-runtime'],
             },
           },
         },
